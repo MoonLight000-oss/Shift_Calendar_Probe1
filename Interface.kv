@@ -1,0 +1,165 @@
+#:import dp kivy.metrics.dp
+
+<ShiftDayButton>:
+    background_normal: ''
+    background_down: ''
+    color: 0, 0, 0, 1
+    bold: True
+    font_size: dp(13)
+    halign: 'center'
+    valign: 'middle'
+    text_size: self.size
+
+<CalendarAppRoot>:
+    orientation: 'vertical'
+    spacing: dp(8)
+    padding: dp(8)
+
+    canvas.before:
+        Color:
+            rgba: 0.08, 0.08, 0.08, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: dp(52)
+        padding: dp(8)
+        spacing: dp(8)
+        canvas.before:
+            Color:
+                rgba: 0.12, 0.12, 0.12, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [12,]
+
+        Label:
+            text: 'Календарь смен'
+            color: 1, 1, 1, 1
+            bold: True
+            font_size: '18sp'
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+
+        Button:
+            text: '☰'
+            size_hint_x: None
+            width: dp(46)
+            background_normal: ''
+            background_down: ''
+            background_color: 0.22, 0.22, 0.22, 1
+            color: 1, 1, 1, 1
+            font_size: '20sp'
+            on_release: root.open_menu(self)
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(42)
+        spacing: dp(8)
+
+        Label:
+            id: selected_day_label
+            text: 'Выбранный день: нет'
+            color: 1, 1, 1, 1
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+
+        Spinner:
+            id: shift_spinner
+            text: 'День'
+            values: root.base_pattern
+            size_hint_x: None
+            width: dp(130)
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_down: ''
+            background_color: 0.92, 0.92, 0.92, 1
+
+        Button:
+            text: 'Применить'
+            size_hint_x: None
+            width: dp(110)
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_down: ''
+            background_color: 0.90, 0.90, 0.90, 1
+            on_release: root.apply_selected_shift()
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(42)
+        spacing: dp(6)
+
+        TextInput:
+            id: start_input
+            hint_text: 'Старт (дд.мм.гггг)'
+            multiline: False
+            text: root.default_start_text()
+            foreground_color: 0, 0, 0, 1
+            background_normal: ''
+            background_active: ''
+            background_color: 1, 1, 1, 1
+            cursor_color: 0, 0, 0, 1
+
+        TextInput:
+            id: end_input
+            hint_text: 'Конец (дд.мм.гггг)'
+            multiline: False
+            text: root.default_end_text()
+            foreground_color: 0, 0, 0, 1
+            background_normal: ''
+            background_active: ''
+            background_color: 1, 1, 1, 1
+            cursor_color: 0, 0, 0, 1
+
+        TextInput:
+            id: range_pattern_input
+            hint_text: 'Режим диапазона: День,Ночь,Ночь,День'
+            multiline: False
+            text: 'День,Ночь,Ночь,День'
+            foreground_color: 0, 0, 0, 1
+            background_normal: ''
+            background_active: ''
+            background_color: 1, 1, 1, 1
+            cursor_color: 0, 0, 0, 1
+
+        Button:
+            text: 'Диапазон'
+            size_hint_x: None
+            width: dp(120)
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_down: ''
+            background_color: 0.88, 0.88, 0.88, 1
+            on_release: root.apply_range_shift()
+
+    Label:
+        id: info_label
+        text: 'Выбери день, затем смену. Диапазон задаётся отдельной строкой.'
+        size_hint_y: None
+        height: dp(28)
+        color: 1, 1, 1, 1
+        font_size: dp(12)
+        halign: 'left'
+        valign: 'middle'
+        text_size: self.size
+
+    ScrollView:
+        id: months_scroll
+        do_scroll_x: False
+        do_scroll_y: True
+        bar_width: dp(8)
+        on_scroll_y: root.on_scroll_y(self, self.scroll_y)
+
+        BoxLayout:
+            id: months_container
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(12)
+            padding: 0, 0, 0, dp(20)
